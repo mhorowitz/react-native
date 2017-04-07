@@ -38,12 +38,14 @@ Pod::Spec.new do |s|
   s.pod_target_xcconfig     = { "CLANG_CXX_LANGUAGE_STANDARD" => "c++14" }
   s.preserve_paths          = "package.json", "LICENSE", "LICENSE-CustomComponents", "PATENTS"
   s.cocoapods_version       = ">= 1.2.0"
+  s.compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1'
 
   s.subspec "Core" do |ss|
     ss.dependency             "Yoga", "#{package["version"]}.React"
     ss.dependency             "React/cxxreact"
     ss.source_files         = "React/**/*.{c,h,m,mm,S}"
-    ss.exclude_files        = "**/__tests__/*", "IntegrationTests/*", "React/DevSupport/*", "React/Modules/RCTDev{LoadingView,Menu}.*", "React/**/RCTTVView.*", "ReactCommon/yoga/*", "React/Cxx*/*"
+    ss.private_header_files = "React/Cxx*/*.h"
+    ss.exclude_files        = "**/__tests__/*", "IntegrationTests/*", "React/DevSupport/*", "React/Modules/RCTDevMenu.*", "React/**/RCTTVView.*", "ReactCommon/yoga/*", "React/Base/RCTBatchedBridge.m", "React/Executors/*"
     ss.framework            = "JavaScriptCore"
     ss.libraries            = "stdc++"
   end
@@ -51,7 +53,7 @@ Pod::Spec.new do |s|
   s.subspec "DevSupport" do |ss|
     ss.dependency             "React/Core"
     ss.dependency             "React/RCTWebSocket"
-    ss.source_files         = "React/DevSupport/*", "React/Modules/RCTDev{LoadingView,Menu}.*"
+    ss.source_files         = "React/DevSupport/*", "React/Modules/RCTDevMenu.*"
   end
 
   s.subspec "tvOS" do |ss|
@@ -59,18 +61,37 @@ Pod::Spec.new do |s|
     ss.source_files         = "React/**/RCTTVView.{h, m}"
   end
 
+#  s.subspec "jschelpers_legacy" do |ss|
+#    ss.source_files         = "ReactCommon/jschelpers/{JavaScriptCore,JSCWrapper}.{cpp,h}", "ReactCommon/jschelpers/systemJSCWrapper.cpp"
+#    ss.private_header_files = "ReactCommon/jschelpers/{JavaScriptCore,JSCWrapper}.h"
+#    ss.pod_target_xcconfig  = { "HEADER_SEARCH_PATHS" => "\"$(PODS_TARGET_SRCROOT)/ReactCommon\"" }
+#    ss.framework            = "JavaScriptCore"
+#  end
+
+#  s.subspec "cxxreact_legacy" do |ss|
+#    ss.dependency             "React/jschelpers_legacy"
+#    ss.dependency             "boost"
+#    ss.dependency             "Folly"
+#    ss.source_files         = "ReactCommon/cxxreact/{JSBundleType}.{cpp,h}"
+#    ss.private_header_files = "ReactCommon/cxxreact/JSBundleType.h"
+#    ss.pod_target_xcconfig  = { "HEADER_SEARCH_PATHS" => "\"$(PODS_TARGET_SRCROOT)/ReactCommon\" \"$(PODS_ROOT)/boost\" \"$(PODS_ROOT)/DoubleConversion\"" }
+#  end
+
   s.subspec "jschelpers" do |ss|
-    ss.source_files         = "ReactCommon/jschelpers/{JavaScriptCore,JSCWrapper}.{cpp,h}", "ReactCommon/jschelpers/systemJSCWrapper.cpp"
-    ss.private_header_files = "ReactCommon/jschelpers/{JavaScriptCore,JSCWrapper}.h"
+    ss.source_files         = "ReactCommon/jschelpers/*.{cpp,h}"
+    ss.private_header_files = "ReactCommon/jschelpers/*.h"
     ss.pod_target_xcconfig  = { "HEADER_SEARCH_PATHS" => "\"$(PODS_TARGET_SRCROOT)/ReactCommon\"" }
     ss.framework            = "JavaScriptCore"
   end
 
   s.subspec "cxxreact" do |ss|
     ss.dependency             "React/jschelpers"
-    ss.source_files         = "ReactCommon/cxxreact/{JSBundleType,oss-compat-util}.{cpp,h}"
-    ss.private_header_files = "ReactCommon/cxxreact/{JSBundleType,oss-compat-util}.h"
-    ss.pod_target_xcconfig  = { "HEADER_SEARCH_PATHS" => "\"$(PODS_TARGET_SRCROOT)/ReactCommon\"" }
+    ss.dependency             "boost"
+    ss.dependency             "Folly"
+    ss.source_files         = "ReactCommon/cxxreact/*.{cpp,h}"
+    ss.exclude_files        = "ReactCommon/cxxreact/JSCTracing.cpp"
+    ss.private_header_files = "ReactCommon/cxxreact/*.h"
+    ss.pod_target_xcconfig  = { "HEADER_SEARCH_PATHS" => "\"$(PODS_TARGET_SRCROOT)/ReactCommon\" \"$(PODS_ROOT)/boost\" \"$(PODS_ROOT)/DoubleConversion\"" }
   end
 
   s.subspec "ART" do |ss|
