@@ -19,12 +19,12 @@
 
 #import <cxxreact/JSBundleType.h>
 #import <jschelpers/JavaScriptCore.h>
-#import <React/JSCSamplingProfiler.h>
 #import <React/RCTAssert.h>
 #import <React/RCTBridge+Private.h>
 #import <React/RCTDefines.h>
 #import <React/RCTDevSettings.h>
 #import <React/RCTJSCErrorHandling.h>
+#import <React/RCTJSCSamplingProfiler.h>
 #import <React/RCTJavaScriptLoader.h>
 #import <React/RCTLog.h>
 #import <React/RCTPerformanceLogger.h>
