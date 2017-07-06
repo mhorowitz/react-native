@@ -15,11 +15,10 @@ const Animated = require('Animated');
 const I18nManager = require('I18nManager');
 const PanResponder = require('PanResponder');
 const React = require('React');
+const PropTypes = require('prop-types');
 const StyleSheet = require('StyleSheet');
 const TimerMixin = require('react-timer-mixin');
 const View = require('View');
-
-const {PropTypes} = React;
 
 const emptyFunction = require('fbjs/lib/emptyFunction');
 
@@ -191,6 +190,11 @@ const SwipeableRow = React.createClass({
     );
   },
 
+  close(): void {
+    this.props.onClose();
+    this._animateToClosedPosition();
+  },
+
   _onSwipeableViewLayout(event: Object): void {
     this.setState({
       isSwipeableViewRendered: true,
@@ -269,6 +273,7 @@ const SwipeableRow = React.createClass({
       {
         duration,
         toValue,
+        useNativeDriver: true,
       },
     ).start(() => {
       this._previousLeft = toValue;

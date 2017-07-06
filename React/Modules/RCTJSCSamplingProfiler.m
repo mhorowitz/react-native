@@ -17,7 +17,7 @@
 @synthesize methodQueue = _methodQueue;
 @synthesize bridge = _bridge;
 
-RCT_EXPORT_MODULE(JSCSamplingProfiler);
+RCT_EXPORT_MODULE(RCTJSCSamplingProfiler);
 
 #ifdef RCT_PROFILE
 RCT_EXPORT_METHOD(operationComplete:(__unused int)token result:(id)profileData error:(id)error)
